@@ -6,3 +6,20 @@ services:
     image: mongo:3.6-xenial
     ports:
     - 27017:27017
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    volumes:
+    - .:/app
+    restart: always
+    ports:
+      - 8080:8080
+    command: python -m api
+    depends_on:
+      - mongodb
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CONFIG_PATH=/app/configs/cars-api-dev-docker.yml

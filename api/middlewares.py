@@ -4,11 +4,13 @@ from typing import Any
 
 from aiohttp import web
 from aiohttp.web_exceptions import HTTPMethodNotAllowed, HTTPNotFound
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError as DuplicateKeyErrorMongo
+from trafaret import DataError
 
-from api.errors import ValidationError, BaseApiError, MethodNotAllowedError, \
-    RouteNotFoundError
-
+from api.errors import (
+    ValidationError, BaseApiError, MethodNotAllowedError,
+    RouteNotFoundError, DuplicateKeyError, UnhandledServerError
+)
 from api.utils import error_response
 
 log = logging.getLogger(__name__)
@@ -31,13 +33,6 @@ async def all_error_response_wrapper(
     try:
         response = await handler(request)
         return response
-    except ValidationError as e:
-        return error_response(
-            message=e.text,
-            error_code=e.code,
-            status=e.status,
-            errors=e.errors,
-        )
     except BaseApiError as e:
         tb = traceback.format_exc()
         log.error(
@@ -56,19 +51,26 @@ async def all_error_response_wrapper(
             status=e.status,
             data=e.data,
         )
-    except DuplicateKeyError as e:
+    except (ValidationError, DataError):
         return error_response(
-            message=e.text,
-            error_code=e.code,
-            status=e.status,
+            message=ValidationError.text,
+            error_code=ValidationError.code,
+            status=ValidationError.status,
+            errors=ValidationError.errors,
         )
-    except HTTPMethodNotAllowed as e:
+    except DuplicateKeyErrorMongo as e:
+        return error_response(
+            message=DuplicateKeyError.text,
+            error_code=DuplicateKeyError.code,
+            status=DuplicateKeyError.status,
+        )
+    except HTTPMethodNotAllowed:
         return error_response(
             message=MethodNotAllowedError.text,
             error_code=MethodNotAllowedError.code,
             status=MethodNotAllowedError.status,
         )
-    except HTTPNotFound as e:
+    except HTTPNotFound:
         return error_response(
             message=RouteNotFoundError.text,
             error_code=RouteNotFoundError.code,

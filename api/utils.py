@@ -103,4 +103,6 @@ def call_once(func):
 
 @call_once
 async def create_index(db):
-    await db.cars.create_index([("vin_code", pymongo.TEXT)], unique=True)
+    await db.cars.create_index(
+        [("vin_code", pymongo.TEXT)], unique=True, sparse=True
+    )

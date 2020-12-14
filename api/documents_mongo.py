@@ -42,7 +42,10 @@ class Car:
             vin_code: str = None,
             fields: Dict = None,
     ):
-        filters = {}
+        filters = {
+            key: value for key, value in locals().items()
+            if value is not None and value not in {'cls', 'db'}
+        }
 
         doc = await db.cars.find_one(filters, fields)
         if not doc:

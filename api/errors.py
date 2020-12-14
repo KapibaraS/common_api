@@ -46,3 +46,9 @@ class UnhandledServerError(BaseApiError):
     status = 500
     text = 'server error'
     code = 1000
+
+
+class DuplicateKeyError(BaseApiError):
+    status = 500
+    text = 'duplicate key error collection'
+    code = 11000

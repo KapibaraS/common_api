@@ -1,7 +1,7 @@
 from aiohttp import web
 
 from api.utils import (
-    extract_data_from_json, serialize_car, is_valid_data, create_index,
+    extract_data_from_json, serialize_car, is_valid_data,
 )
 
 
@@ -17,6 +17,3 @@ async def create_car(request):
     collection = request.db.cars
     await collection.insert_one(post_data)
     return web.Response(text="create")
-
-
-
