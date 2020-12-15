@@ -1,5 +1,6 @@
 import logging
 import traceback
+from functools import wraps
 from typing import Any
 
 from aiohttp import web
@@ -18,6 +19,7 @@ log = logging.getLogger(__name__)
 
 async def db_handler(app, handler):
     @web.middleware
+    @wraps(handler)
     async def middleware(request):
         request.db = app['mongodb_connection']
         request.db_cli = app['mongodb_client']

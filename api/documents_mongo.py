@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Dict, Any
 from uuid import uuid4
 
+from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 
@@ -40,24 +41,28 @@ class Car:
             year_production: str = None,
             color: str = None,
             vin_code: str = None,
-            fields: Dict = None,
     ):
         filters = {
             key: value for key, value in locals().items()
-            if value is not None and value not in {'cls', 'db'}
+            if value is not None and value not in ('cls', 'db')
         }
 
-        doc = await db.cars.find_one(filters, fields)
+        doc = await db.cars.find_one({'_id': ObjectId(_id)})
         if not doc:
             return
         return cls(collection=db, **doc)
 
+    async def get(self, _id: str, ):
+        document = await self.__collection.cars.find_one(
+            {'_id': ObjectId(_id)}
+        )
+        return document
+
     async def create(self) -> None:
-        self._id = self._id or uuid4().hex
         now = datetime.utcnow()
         self.created_at = now
         self.updated_at = now
-        await self.__collection.insert_one(self.to_dict())
+        await self.__collection.cars.insert_one(self.to_dict())
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -68,3 +73,6 @@ class Car:
             'color': self.color,
             'vin_code': self.vin_code,
         }
+
+    async def delete(self, _id):
+        await self.__collection.cars.delete_one({'_id': ObjectId(_id)})

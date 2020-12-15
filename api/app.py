@@ -1,4 +1,3 @@
-import pymongo
 from aiohttp import web
 from aiohttp.web_middlewares import normalize_path_middleware
 
