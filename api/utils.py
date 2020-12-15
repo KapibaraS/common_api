@@ -1,6 +1,7 @@
 import json
 import logging
 from asyncio import AbstractEventLoop
+from functools import wraps
 from typing import Dict, Any
 
 import pymongo
@@ -38,17 +39,6 @@ async def extract_data_from_json(request: web.Request) -> Dict[str, Any]:
         raise BadJSONRequestDataError
 
 
-def serialize_car(car):
-    return {
-        "car_id": str(car['_id']),
-        "manufacturer": car['manufacturer'],
-        "model": car['model'],
-        "year_production": car['year_production'],
-        "color": car['color'],
-        "vin_code": car['vin_code'],
-    }
-
-
 def error_response(
         message: str, error_code: int = 1000,
         errors: str = None,
@@ -66,33 +56,8 @@ def error_response(
     )
 
 
-def is_valid_data(data):
-    json_create_car_schema.check(data)
-    errors = {}
-    if len(data['model']) > 200:
-        errors['model'] = 'model must be less than 200 characters'
-
-    if len(data['manufacturer']) > 200:
-        errors['manufacturer'] = 'manufacturer must be less than 200 characters'  # noqa
-
-    if not data['year_production'].isdigit():
-        errors['year_production'] = 'year_production must be 4 digits'
-    elif len(data['year_production']) != 4:
-        errors['year_production'] = 'year_production must be 4 digits'
-    if len(data['color']) > 100:
-        errors['color'] = 'invalid color'
-
-    if len(data['vin_code']) > 17:
-        errors['vin_code'] = (
-            f'vin_code must be 17 characters, '
-            f'show link {VIN_CODE_WIKI_URL}'
-        )
-
-    if errors:
-        raise ValidationError(errors=errors)
-
-
 def call_once(func):
+    @wraps(func)
     async def inner(*args, **kwargs):
         if not inner.call:
             await func(*args, **kwargs)

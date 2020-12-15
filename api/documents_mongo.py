@@ -27,7 +27,6 @@ class Car:
         self.year_production = year_production
         self.color = color
         self.vin_code = vin_code
-        self._id = _id
         self.created_at = created_at
         self.updated_at = updated_at
 
@@ -35,7 +34,6 @@ class Car:
     async def load(
             cls,
             db: AsyncIOMotorDatabase,
-            _id: str = None,
             manufacturer: str = None,
             model: str = None,
             year_production: str = None,
@@ -46,7 +44,7 @@ class Car:
             key: value for key, value in locals().items()
             if value is not None and value not in ('cls', 'db')
         }
-
+        # find_many
         doc = await db.cars.find_one({'_id': ObjectId(_id)})
         if not doc:
             return
@@ -66,7 +64,6 @@ class Car:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            '_id': self._id,
             'manufacturer': self.manufacturer,
             'model': self.model,
             'year_production': self.year_production,

@@ -4,13 +4,18 @@ from functools import wraps
 from typing import Any
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPMethodNotAllowed, HTTPNotFound
+from aiohttp.web_exceptions import (
+    HTTPMethodNotAllowed,
+    HTTPNotFound,
+)
+from marshmallow import ValidationError
 from pymongo.errors import DuplicateKeyError as DuplicateKeyErrorMongo
 from trafaret import DataError
 
 from api.errors import (
-    ValidationError, BaseApiError, MethodNotAllowedError,
-    RouteNotFoundError, DuplicateKeyError, UnhandledServerError
+    BaseApiError, MethodNotAllowedError,
+    RouteNotFoundError, DuplicateKeyError,
+    UnhandledServerError,
 )
 from api.utils import error_response
 
@@ -53,12 +58,19 @@ async def all_error_response_wrapper(
             status=e.status,
             data=e.data,
         )
-    except (ValidationError, DataError):
+    except ValidationError as e:
         return error_response(
-            message=ValidationError.text,
-            error_code=ValidationError.code,
-            status=ValidationError.status,
-            errors=ValidationError.errors,
+            "invalide data",
+            error_code=1006,
+            errors=e.messages,
+        )
+    except DataError as e:
+        # TODO узнать что отдавать
+        return error_response(
+            # message=ValidationError.text,
+            # error_code=ValidationError.code,
+            # status=ValidationError.status,
+            # errors=ValidationError.errors,
         )
     except DuplicateKeyErrorMongo as e:
         return error_response(
