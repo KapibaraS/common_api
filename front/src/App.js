@@ -1,5 +1,5 @@
 import React from "react";
 
 export const App = () => (
-  <b>Hello</b>
+  <b>Hello, 23423423</b>
 );
