@@ -1,7 +1,9 @@
+const HtmlWebPackPlugin = require( 'html-webpack-plugin' );
+
 const path = require( 'path' );
 module.exports = {
   context: __dirname,
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   output: {
     path: path.resolve( __dirname, 'dist' ),
     filename: 'bundle.js',
@@ -48,11 +50,11 @@ module.exports = {
       }
     ]
   },
-  // plugins: [
-  //   new HtmlWebPackPlugin({
-  //     template: path.resolve( __dirname, '../api/index.html' ),
-  //     filename: 'index.html',
-  //     favicon: './public/favicon.ico'
-  //   }),
-  // ],
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: path.resolve( __dirname, '../api/index.html' ),
+      filename: 'index.html',
+      favicon: './public/favicon.ico'
+    }),
+  ],
 };
