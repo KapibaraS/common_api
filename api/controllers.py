@@ -2,13 +2,13 @@ from aiohttp import web
 
 from api.documents_mongo import Car
 from api.schemas import CarSchema
-from api.utils import extract_data_from_json
+from api.utils import extract_data_from_json, CONTENT
 
 QUANTITY_CARS_ON_PAGE = 10
 
 
 async def index(request):
-    return web.HTTPFound(location='/v1/get_cars/1')
+    return web.Response(body=CONTENT, content_type='text/html')
 
 
 async def get_cars(request):

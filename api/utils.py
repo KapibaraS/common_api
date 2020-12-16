@@ -18,6 +18,22 @@ VIN_CODE_WIKI_URL = (
     'https://en.wikipedia.org/wiki/Vehicle_identification_number'
 )
 
+CONTENT = ("""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>car dashboard</title>
+        </head>
+        <body style="margin: 0;">
+            <div id="root">
+            <div/>
+         <script type="text/javascript" src="/static/bundle.js">
+         </script>
+        </body>
+        </html>
+    """)
+
 
 def mongo_conn_startup(dsn: str, db_name: str, loop: AbstractEventLoop):
     client = AsyncIOMotorClient(

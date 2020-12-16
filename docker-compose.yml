@@ -23,3 +23,12 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - CONFIG_PATH=/app/configs/cars-api-dev-docker.yml
+
+  front:
+    container_name: front
+    build:
+      context: .
+      dockerfile: ./Dockerfile.front
+    volumes:
+      - .:/app/
+    command: sh -c "cd front && npm start"

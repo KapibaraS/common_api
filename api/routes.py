@@ -16,3 +16,5 @@ def setup_routes(app):
         '/v1/get_cars/{page}', controllers.get_cars, name='get_cars'
     )
     app.router.add_route('*', '/{tail:.*}', controllers.index)
+
+    app.router.add_static('/static', './api/build')
