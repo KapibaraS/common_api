@@ -17,7 +17,6 @@
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "html-webpack-plugin": "^4.4.1",
-    "react-bootstrap-table-next": "^4.0.3",
     "react-router-dom": "^5.2.0",
     "style-loader": "^2.0.0",
     "webpack": "^5.10.3",
@@ -25,8 +24,12 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
+    "lodash.snakecase": "^4.1.1",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
-    "react-bootstrap-validation": "^0.1.11",
+    "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1"
   }
 }
